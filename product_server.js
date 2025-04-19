@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
-const Product = require('./product');
+const Products = require('./product');
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
-const port = 5000;
+const port = 3000;
 
 // Replace the password in the line below
-const uri = "mongodb://root:zJFlGDA0bsFwkmHlbKHzOBYd@172.21.207.71:27017";
+const uri = "mongodb://root:WfGTG770rAwEW1AtJL4wbK0R@172.21.192.102:27017";
 
 // MongoDB Connection with error handling
 mongoose.connect(uri, { dbName: 'productDB' })
@@ -20,10 +20,7 @@ app.use(bodyParser.json());
 // GET endpoint
 app.get('/products', async (req, res) => {
   try {
-    const documents = await Product.find();
-    if (!documents.length) {
-      return res.status(404).json({ error: "No products found" });
-    }
+    const documents = await Products.find();
     res.json(documents);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch products" });
@@ -34,7 +31,7 @@ app.get('/products', async (req, res) => {
 app.post('/add_product', async (req, res) => {
   try {
     const data = req.body;
-    const product = new Product({
+    const products = new Products({
 		id: data.id,
 		name: data.name,
 		description: data.description,
@@ -43,7 +40,7 @@ app.post('/add_product', async (req, res) => {
     });
 
     // Save the Product to the database
-    await product.save();
+    await products.save();
     res.json({ message: 'Product added successfully' });
   } catch (error) {
     res.status(500).json({ error: "Failed to add product" });

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const productSchema = new mongoose.Schema({
+const products = new mongoose.Schema({
   id: String,
   name: String,
   description: String,
@@ -7,4 +7,4 @@ const productSchema = new mongoose.Schema({
   image_url: String
 });
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model('products', products);
