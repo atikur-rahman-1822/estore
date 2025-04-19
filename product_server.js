@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const Employees = require('./product');
-
+const Product = require('./product');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -19,30 +18,35 @@ mongoose.connect(uri, { dbName: 'productDB' })
 app.use(bodyParser.json());
 
 // GET endpoint
-app.get('/api/products', async (req, res) => {
+app.get('/products', async (req, res) => {
   try {
-    const documents = await Employees.find();
+    const documents = await Product.find();
+    if (!documents.length) {
+      return res.status(404).json({ error: "No products found" });
+    }
     res.json(documents);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch employees" });
+    res.status(500).json({ error: "Failed to fetch products" });
   }
 });
 
 // POST endpoint for adding an employee
-app.post('/api/add_product', async (req, res) => {
+app.post('/add_product', async (req, res) => {
   try {
     const data = req.body;
-    const product = new Employees({
-      emp_name: data.name,
-      category: data.category,
-      price: data.price
+    const product = new Product({
+		id: data.id,
+		name: data.name,
+		description: data.description,
+		price: data.price,
+		image_url: data.image_url
     });
 
-    // Save the employee to the database
+    // Save the Product to the database
     await product.save();
-    res.json({ message: 'Employee added successfully' });
+    res.json({ message: 'Product added successfully' });
   } catch (error) {
-    res.status(500).json({ error: "Failed to add employee" });
+    res.status(500).json({ error: "Failed to add product" });
   }
 });
 
